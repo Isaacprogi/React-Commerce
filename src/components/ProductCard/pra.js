@@ -10,49 +10,7 @@ import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
 
 const Products = () => {
-  const [data, setData] = useState([
-  {
-    "id": 1,
-    "title": "Fjallraven - Foldsack No. 1 Backpack, Fits 15 Laptops",
-    "price": 109.95,
-    "category": "men's clothing",
-    "rating": { "rate": 3.9, "count": 120 },
-    "image": "https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_t.png"
-  },
-  {
-    "id": 2,
-    "title": "Mens Casual Premium Slim Fit T-Shirts",
-    "price": 22.3,
-    "category": "men's clothing",
-    "rating": { "rate": 4.1, "count": 259 },
-    "image": "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_t.png"
-  },
-  {
-    "id": 5,
-    "title": "John Hardy Women's Legends Naga Gold & Silver Dragon Station Chain Bracelet",
-    "price": 695,
-    "category": "jewelery",
-    "rating": { "rate": 4.6, "count": 400 },
-    "image": "https://fakestoreapi.com/img/71pWzhdJNwL._AC_UL640_QL65_ML3_t.png"
-  },
-  {
-    "id": 9,
-    "title": "WD 2TB Elements Portable External Hard Drive - USB 3.0",
-    "price": 64,
-    "category": "electronics",
-    "rating": { "rate": 3.3, "count": 203 },
-    "image": "https://fakestoreapi.com/img/61IBBVJvSDL._AC_SY879_t.png"
-  },
-  {
-    "id": 19,
-    "title": "Opna Women's Short Sleeve Moisture",
-    "price": 7.95,
-    "category": "women's clothing",
-    "rating": { "rate": 4.5, "count": 146 },
-    "image": "https://fakestoreapi.com/img/51eg55uWmdL._AC_UX679_t.png"
-  }
-]
-);
+  const [data, setData] = useState([]);
   const [filter, setFilter] = useState(data);
   const [loading, setLoading] = useState(false);
   let componentMounted = true;
@@ -67,7 +25,6 @@ const Products = () => {
     const getProducts = async () => {
       setLoading(true);
       const response = await fetch("https://fakestoreapi.com/products/");
-      console.log(response.data)
       if (componentMounted) {
         setData(await response.clone().json());
         setFilter(await response.json());
@@ -79,7 +36,7 @@ const Products = () => {
       };
     };
 
-    // getProducts();
+    getProducts();
   }, []);
 
   const Loading = () => {
@@ -150,23 +107,55 @@ const Products = () => {
             Electronics
           </button>
         </div>
-       {filter.map((product) => {
-        const variants = ["Red", "Blue", "Green"];
-        const productWithVariants = { ...product, variants };
 
-        return (
-          <div
-            id={product.id}
-            key={product.id}
-            className="col-md-4 col-sm-6 col-xs-8 col-12 mb-4"
-          >
-            <ProductCard
-              product={productWithVariants}
-              onAddToCart={(prod) => addProduct(prod)}
-            />
-          </div>
-        );
-      })}
+        {filter.map((product) => {
+          return (
+            <div
+              id={product.id}
+              key={product.id}
+              className="col-md-4 col-sm-6 col-xs-8 col-12 mb-4"
+            >
+              <div className="card text-center h-100" key={product.id}>
+                <img
+                  className="card-img-top p-3"
+                  src={product.image}
+                  alt="Card"
+                  height={300}
+                />
+                <div className="card-body">
+                  <h5 className="card-title">
+                    {product.title.substring(0, 12)}...
+                  </h5>
+                  <p className="card-text">
+                    {product.description.substring(0, 90)}...
+                  </p>
+                </div>
+                <ul className="list-group list-group-flush">
+                  <li className="list-group-item lead">$ {product.price}</li>
+                  {/* <li className="list-group-item">Dapibus ac facilisis in</li>
+                    <li className="list-group-item">Vestibulum at eros</li> */}
+                </ul>
+                <div className="card-body">
+                  <Link
+                    to={"/product/" + product.id}
+                    className="btn btn-dark m-1"
+                  >
+                    Buy Now
+                  </Link>
+                  <button
+                    className="btn btn-dark m-1"
+                    onClick={() => {
+                      toast.success("Added to cart");
+                      addProduct(product);
+                    }}
+                  >
+                    Add to Cart
+                  </button>
+                </div>
+              </div>
+            </div>
+          );
+        })}
       </>
     );
   };
