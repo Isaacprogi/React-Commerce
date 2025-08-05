@@ -6,39 +6,53 @@ import ProductCard from "./ProductCard/ProductCard";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
-import { Link } from "react-router-dom";
-import toast from "react-hot-toast";
 
 const Products = () => {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState([])
   const [filter, setFilter] = useState(data);
   const [loading, setLoading] = useState(false);
-  let componentMounted = true;
 
   const dispatch = useDispatch();
 
   const addProduct = (product) => {
+    console.log(product)
     dispatch(addCart(product));
   };
 
-  useEffect(() => {
-    const getProducts = async () => {
-      setLoading(true);
+ useEffect(() => {
+  let componentMounted = true;
+
+  const getProducts = async () => {
+    setLoading(true);
+    try {
       const response = await fetch("https://fakestoreapi.com/products/");
-      console.log(response.data)
-      if (componentMounted) {
-        setData(await response.clone().json());
-        setFilter(await response.json());
-        setLoading(false);
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
       }
 
-      return () => {
-        componentMounted = false;
-      };
-    };
+      const data = await response.json();
 
-    getProducts();
-  }, []);
+      if (componentMounted) {
+        setData(data);
+        setFilter(data);
+      }
+    } catch (error) {
+      console.error("Failed to fetch products:", error);
+    } finally {
+      if (componentMounted) {
+        setLoading(false);
+      }
+    }
+  };
+
+  getProducts();
+
+  return () => {
+    componentMounted = false;
+  };
+}, []);
+
 
   const Loading = () => {
     return (

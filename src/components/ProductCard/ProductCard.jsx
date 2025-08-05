@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import toast from "react-hot-toast";
-import { Heart, Star } from "lucide-react";
+import { Star } from "lucide-react";
 
 export default function ProductCard({ product, onAddToCart }) {
   const inStock = product?.rating?.count > 0;
@@ -16,26 +16,26 @@ export default function ProductCard({ product, onAddToCart }) {
 
   return (
     <div
-      className="card h-100 border-0 shadow-sm overflow-hidden rounded-4"
+      className="card h-100 border-1 shadow-sm overflow-hidden rounded-4"
       style={{ transition: "all 0.3s ease" }}
     >
       {/* Image with wishlist icon */}
-      <div className="position-relative bg-light">
-        <img
-          src={product.image}
-          alt={product.title}
-          className="card-img-top p-3"
-          style={{ height: 200, objectFit: "contain" }}
-        />
-        {product.originalPrice && (
-          <span className="badge bg-danger position-absolute top-0 start-0 m-2">
-            Sale
-          </span>
-        )}
-      </div>
+      <img
+        src={product.image}
+        alt={product.title}
+        className="card-img-top p-3"
+        style={{ height: 200, objectFit: "contain" }}
+        onError={(e) => {
+          e.target.src = "https://via.placeholder.com/300x200?text=No+Image";
+          e.target.onerror = null;
+        }}
+      />
 
       {/* Card content */}
-      <div className="card-body d-flex flex-column" style={{ overflow: "visible" }}>
+      <div
+        className="card-body d-flex flex-column"
+        style={{ overflow: "visible" }}
+      >
         <div className="d-flex justify-content-between align-items-start mb-2">
           <h5 className="card-title text-truncate mb-0" title={product.title}>
             {product.title}
@@ -65,7 +65,7 @@ export default function ProductCard({ product, onAddToCart }) {
 
         {/* Variant selector */}
         <div className="d-flex flex-wrap justify-items-center gap-4">
-          <div>Color</div>
+          <div className="fw-bold">Color</div>
           <select
             className="form-select form-select-sm mb-3 position-relative"
             value={selectedVariant}
