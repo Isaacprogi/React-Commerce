@@ -10,49 +10,7 @@ import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
 
 const Products = () => {
-  const [data, setData] = useState([
-  {
-    "id": 1,
-    "title": "Fjallraven - Foldsack No. 1 Backpack, Fits 15 Laptops",
-    "price": 109.95,
-    "category": "men's clothing",
-    "rating": { "rate": 3.9, "count": 120 },
-    "image": "https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_t.png"
-  },
-  {
-    "id": 2,
-    "title": "Mens Casual Premium Slim Fit T-Shirts",
-    "price": 22.3,
-    "category": "men's clothing",
-    "rating": { "rate": 4.1, "count": 259 },
-    "image": "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_t.png"
-  },
-  {
-    "id": 5,
-    "title": "John Hardy Women's Legends Naga Gold & Silver Dragon Station Chain Bracelet",
-    "price": 695,
-    "category": "jewelery",
-    "rating": { "rate": 4.6, "count": 400 },
-    "image": "https://fakestoreapi.com/img/71pWzhdJNwL._AC_UL640_QL65_ML3_t.png"
-  },
-  {
-    "id": 9,
-    "title": "WD 2TB Elements Portable External Hard Drive - USB 3.0",
-    "price": 64,
-    "category": "electronics",
-    "rating": { "rate": 3.3, "count": 203 },
-    "image": "https://fakestoreapi.com/img/61IBBVJvSDL._AC_SY879_t.png"
-  },
-  {
-    "id": 19,
-    "title": "Opna Women's Short Sleeve Moisture",
-    "price": 7.95,
-    "category": "women's clothing",
-    "rating": { "rate": 4.5, "count": 146 },
-    "image": "https://fakestoreapi.com/img/51eg55uWmdL._AC_UX679_t.png"
-  }
-]
-);
+  const [data, setData] = useState([]);
   const [filter, setFilter] = useState(data);
   const [loading, setLoading] = useState(false);
   let componentMounted = true;
@@ -79,7 +37,7 @@ const Products = () => {
       };
     };
 
-    // getProducts();
+    getProducts();
   }, []);
 
   const Loading = () => {
