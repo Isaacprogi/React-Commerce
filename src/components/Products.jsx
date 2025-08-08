@@ -6,53 +6,51 @@ import ProductCard from "./ProductCard/ProductCard";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
-
 const Products = () => {
-  const [data, setData] = useState([])
+  const [data, setData] = useState([]);
   const [filter, setFilter] = useState(data);
   const [loading, setLoading] = useState(false);
 
   const dispatch = useDispatch();
 
   const addProduct = (product) => {
-    console.log(product)
-    dispatch(addCart(product));
+    console.log(product);
+    // dispatch(addCart(product));
   };
 
- useEffect(() => {
-  let componentMounted = true;
+  useEffect(() => {
+    let componentMounted = true;
 
-  const getProducts = async () => {
-    setLoading(true);
-    try {
-      const response = await fetch("https://fakestoreapi.com/products/");
+    const getProducts = async () => {
+      setLoading(true);
+      try {
+        const response = await fetch("https://fakestoreapi.com/products/");
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        if (componentMounted) {
+          setData(data);
+          setFilter(data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch products:", error);
+      } finally {
+        if (componentMounted) {
+          setLoading(false);
+        }
       }
+    };
 
-      const data = await response.json();
+    getProducts();
 
-      if (componentMounted) {
-        setData(data);
-        setFilter(data);
-      }
-    } catch (error) {
-      console.error("Failed to fetch products:", error);
-    } finally {
-      if (componentMounted) {
-        setLoading(false);
-      }
-    }
-  };
-
-  getProducts();
-
-  return () => {
-    componentMounted = false;
-  };
-}, []);
-
+    return () => {
+      componentMounted = false;
+    };
+  }, []);
 
   const Loading = () => {
     return (
@@ -122,23 +120,46 @@ const Products = () => {
             Electronics
           </button>
         </div>
-       {filter.map((product) => {
-        const variants = ["Red", "Blue", "Green"];
-        const productWithVariants = { ...product, variants };
+        {filter.map((product) => {
+          const generateVariants = () => {
+            const colors = ["Red", "Blue", "Green"];
+            const sizes = ["S", "M", "L"];
+            const variantList = [];
 
-        return (
-          <div
-            id={product.id}
-            key={product.id}
-            className="col-md-4 col-sm-6 col-xs-8 col-12 mb-4"
-          >
-            <ProductCard
+            colors.forEach((color) => {
+              sizes.forEach((size) => {
+                variantList.push({
+                  color,
+                  size,
+                  stock: Math.floor(Math.random() * 5),
+                });
+              });
+            });
+
+            return variantList;
+          };
+
+          // const hasVariants = Math.random() > 0.3;
+          const productWithVariants = {
+            ...product,
+            // variants: hasVariants ? generateVariants() : [],
+            variants: generateVariants(),
+          };
+          console.log(productWithVariants);
+
+          return (
+            <div
+              id={product.id}
+              key={product.id}
+              className="col-md-4 col-sm-6 col-xs-8 col-12 mb-4"
+            >
+              <ProductCard
               product={productWithVariants}
               onAddToCart={(prod) => addProduct(prod)}
             />
-          </div>
-        );
-      })}
+            </div>
+          );
+        })}
       </>
     );
   };

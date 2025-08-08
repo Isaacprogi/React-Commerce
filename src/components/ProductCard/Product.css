@@ -1,0 +1,8 @@
+.card-image-wrapper{
+ background-color: #f3f4f6;
+ padding: 1rem;
+}
+.custom-card-border {
+  border: 0.5px solid #abb2bd !important;
+  transition: all 0.3s ease;
+}
